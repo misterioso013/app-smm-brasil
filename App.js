@@ -1,47 +1,50 @@
-import React from 'react';
-import { StyleSheet, BackHandler } from 'react-native';
-import {WebView} from 'react-native-webview';
+import React, { useRef, useEffect, useState } from 'react';
+import { StyleSheet, BackHandler, Image, View } from 'react-native';
+import {WebView } from 'react-native-webview';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
 
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      url: 'https://smm.app.br/auth/login',
-    };
+export default function App() {
+  const webViewRef = useRef(null);
+  const [canGoBack, setCanGoBack] = useState(false);
+  
+  const handleBackPress = () => {
+    if (canGoBack) {
+      webViewRef.current.goBack();
+      return true;
+    }
+    return false;
   }
 
-  componentDidMount() {
-    BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
+  useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', handleBackPress);
+    return () => {
+      BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
+    }
+  } , [canGoBack]);
+
+  const onNavigationStateChange = (navState) => {
+    setCanGoBack(navState.canGoBack);
   }
 
-  componentWillUnmount() {
-    BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
-  }
-
-  handleBackButton = () => {
-    this.setState({url: 'https://smm.app.br/statistics'});
-    return true;
-  }
-
-  render() {
     return (
       <WebView
-        source={{uri: this.state.url}}
+        source={{uri: 'https://smm.app.br/auth/login'}}
         style={styles.webView}
-        onNavigationStateChange={(event) => {
-          this.setState({url: event.url});
-        }
-        }
+        ref={webViewRef}
         sharedCookiesEnabled={true}
         cacheEnabled={true}
         javaScriptEnabled={true}
         domStorageEnabled={true}
+        onNavigationStateChange={onNavigationStateChange}
+        startInLoadingState={true}
+        renderLoading={() => (
+          <View style={styles.preload}>
+            <Image source={require('./assets/preload.gif')} />
+          </View>
+        )}
       />
     );
   }
-}
-
 
 
 const styles = StyleSheet.create({
@@ -49,6 +52,15 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: getStatusBarHeight(),
   },
-});
+  preload: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: '#fff',
+    justifyContent: 'center',
+    alignItems: 'center'
 
-export default App;
+  }
+});
