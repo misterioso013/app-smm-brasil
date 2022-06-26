@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "app-smmbrasil",
+    "name": "SMM Brasil",
     "slug": "app-smmbrasil",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -9,7 +9,7 @@
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#6574cd"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -23,8 +23,11 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
-      }
+        "backgroundColor": "#6574cd",
+      },
+      "package": "com.helpdevelop.smmbrasil",
+      "versionCode": 1,
+      "playStoreUrl": "https://play.google.com/store/apps/details?id=com.helpdevelop.smmbrasil"
     },
     "web": {
       "favicon": "./assets/favicon.png"
